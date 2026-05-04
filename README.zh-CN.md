@@ -1,11 +1,11 @@
 # AgentForge Protocol
 
 <p align="center">
-  <strong>给自主编程 Agent 使用的验证优先编码协议。</strong>
+  <strong>给编程 Agent 用的协议。重点不是写得快，是写完有证据。</strong>
 </p>
 
 <p align="center">
-  <em>适用于 Hermes、OpenClaw、Claude Code、Codex CLI，以及任何能够读取、编辑、测试、委派和验证的 Agent。</em>
+  <em>适用于 Hermes、OpenClaw、Claude Code、Codex CLI，以及任何能读文件、改代码、跑测试、派 subagent、检查自己说法的 Agent。</em>
 </p>
 
 <p align="center">
@@ -22,44 +22,38 @@
 
 ## 为什么需要它
 
-LLM 编程 Agent 很快，但快不等于正确。
+编程 Agent 很快。这是好玩的地方，也是危险的地方。
 
-常见失败模式通常很无聊，却很昂贵：
+它们可以在还没理解仓库前就写出 patch。可以生成一份看起来很整齐、但其实什么也证明不了的计划。可以开几个 subagent，收下它们的汇报，然后悄悄把一坨东西 ship 出去。真正用这些工具干过活的人，大概都见过某个版本的这种场面。
 
-- 不看代码库就猜需求
-- 添加没人要求的抽象
-- 因为旁边代码看起来不顺眼就顺手改掉
-- 实现之后再补测试，然后把这叫信心
-- 靠堆叠随机补丁来 debug
-- 让 subagent 产生未经验证的副作用
-- 还没真正跑过任何东西就说“完成了”
+AgentForge Protocol 是一套很小的操作习惯，用来避开这种坑。
 
-这个 skill 把一套避免这些陷阱的工作流打包起来。
+它告诉 Agent 什么时候保持轻量，什么时候该慢下来，什么时候先写测试，什么时候应该 debug 而不是猜，什么时候可以派 subagent，但不能把方向盘交出去。
 
-它在谨慎能提高正确性时保持谨慎，但不会把重流程强加到琐碎修改上。
+核心很简单：有意义的步骤，最后都要留下证据。
 
 ---
 
 ## 它组合了什么
 
-`agentforge-protocol` 是这些 skill 之上的路由器和操作层：
+`agentforge-protocol` 站在几个更小的 skill 之上，决定当前该由谁主导：
 
-- **karpathy-guidelines**，极简、假设管理、精准 diff、验证。
-- **grill-plan**，在实现前澄清模糊或高风险需求。
-- **writing-plans**，把清晰需求写成可执行的实现计划。
-- **test-driven-development**，为行为改动执行 RED → GREEN → REFACTOR。
-- **systematic-debugging**，先找根因，再修复。
-- **subagent-driven-development**，每个任务一个新 subagent，并分阶段 review。
-- **requesting-code-review**，commit 或 ship 前的验证门禁。
-- **spike**，在可行性不确定时做可丢弃实验。
+- **karpathy-guidelines**，小 diff，少假设，少耍聪明。
+- **grill-plan**，需求模糊或风险高时，先把决定问清楚再写代码。
+- **writing-plans**，把清晰需求变成 Agent 真能执行的步骤。
+- **test-driven-development**，行为改动先有失败测试，再有修复。
+- **systematic-debugging**，bug 先找根因，不靠猜。
+- **subagent-driven-development**，拆任务可以，但不能丢掉控制权。
+- **requesting-code-review**，commit、push、ship 前的最后一道门。
+- **spike**，不确定能不能做时，先做一个能丢的实验，比继续空谈强。
 
-这套 workflow 是 Hermes-native 的：
+它用 Hermes 自己的层级，不额外制造文档垃圾：
 
-- 当前进度进入 `todo` tool
-- 非琐碎计划进入 `.hermes/plans/`
-- 长期用户偏好和环境事实进入 memory
-- 可复用流程和坑点沉淀为 skill
-- 只有当仓库本身已有约定时，才使用项目本地的 `tasks/lessons.md`
+- 当前进度进 `todo` tool
+- 非琐碎计划进 `.hermes/plans/`
+- 稳定的用户偏好或环境事实进 memory
+- 可重复的流程和坑点变成 skill
+- 只有仓库本来就这么做时，才使用项目里的 `tasks/lessons.md`
 
 <p align="center">
   <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
@@ -83,7 +77,7 @@ cp -R agentforge-protocol/skills/software-development/agentforge-protocol \
   ~/.hermes/skills/software-development/
 ```
 
-启动新的 Hermes session，让 skill loader 看到它：
+启动新的 Hermes session，让 skill loader 读到它：
 
 ```bash
 hermes --skills agentforge-protocol
@@ -99,25 +93,25 @@ hermes --skills agentforge-protocol
 
 ## 快速开始
 
-当 coding 任务不只是一个显而易见的小改动时使用它：
+当任务不只是一个很明显的小改动时，用它：
 
 ```text
 Use agentforge-protocol. Add email validation to the signup flow.
 ```
 
-面对模糊 feature：
+需求还不清楚时：
 
 ```text
 Use agentforge-protocol. Design and implement workspace-level permissions.
 ```
 
-面对 bug：
+遇到 bug 时：
 
 ```text
 Use agentforge-protocol. The export job passes locally but fails in CI with a timezone assertion.
 ```
 
-面对可行性问题：
+想先确认可不可行时：
 
 ```text
 Use agentforge-protocol. Spike whether we can stream partial PDF extraction results to the UI.
@@ -127,21 +121,21 @@ Use agentforge-protocol. Spike whether we can stream partial PDF extraction resu
 
 ## 路由器
 
-这个 skill 会先对任务分类。
+第一步是判断任务类型。错字不需要仪式感，迁移就需要。
 
-### 琐碎且显而易见的改动
+### 琐碎且明显的改动
 
-只走轻量路径。
+轻处理。
 
 ```text
 inspect → minimal patch → cheap verification → stop
 ```
 
-不强制计划。不强制 subagent。不做流程表演。
+不强行写计划。不强行派 subagent。不演流程。
 
 ### 清晰的行为改动
 
-默认使用 TDD。
+默认走 TDD，除非真的有理由不走。
 
 ```text
 read existing pattern
@@ -155,7 +149,7 @@ read existing pattern
 
 ### 模糊或架构类任务
 
-先使用 grill-plan。
+碰 production code 前，先用 grill-plan。
 
 ```text
 inspect code/docs/tests/logs
@@ -168,7 +162,7 @@ inspect code/docs/tests/logs
 
 ### 多任务实现
 
-使用 subagent-driven development。
+可以用 subagent，但主 Agent 仍然负责结果。
 
 ```text
 read saved plan once
@@ -183,7 +177,7 @@ read saved plan once
 
 ### Bug 或测试失败
 
-使用 systematic debugging。
+先 debug，再 patch。
 
 ```text
 read full error
@@ -198,7 +192,7 @@ read full error
 
 ### 可行性未知
 
-使用 spike。
+先 spike。不要把不确定性直接写进 production architecture。
 
 ```text
 decompose feasibility questions
@@ -212,7 +206,7 @@ decompose feasibility questions
 
 ## 编码前预期
 
-对于非琐碎 production code，这套 workflow 会在实现前记录：
+非琐碎 production code 动手前，先写下这些东西：
 
 ```md
 ## Pre-coding expectations
@@ -221,26 +215,26 @@ decompose feasibility questions
 我认为系统里什么是真的，以及为什么这个改动应该有效。
 
 ### Success criteria
-能够证明任务完成的可观察检查。
+哪些检查能让我放心说，这事做完了。
 
 ### Failure signals
-说明方案错误或不安全的独立信号。
-这些不能只是“没有满足成功标准”。
+说明方案错了或不安全的独立信号。
+不能只是“成功标准没通过”。
 
 ### Ablations and expected observations
-如果改变某个关键假设或方案，预期会看到什么。
+如果换掉某个关键假设或做法，我预期会看到什么。
 
 ### Minimal verification path
-能够证明改动的最便宜测试、命令、API 调用、UI 操作或日志检查。
+最便宜的证明方式：测试、命令、API 调用、UI 操作或日志检查。
 ```
 
-这一段的作用是防止 Agent 凭感觉写代码。
+这段不是装严谨。它是用来防止 Agent 凭感觉写代码的。
 
 ---
 
 ## 计划形态
 
-非琐碎计划保存在 `.hermes/plans/`，并使用 action → verification 步骤。
+非琐碎计划放在 `.hermes/plans/`，每一步都写成 action → verification。
 
 ```md
 # <Task> Implementation Plan
@@ -278,28 +272,28 @@ decompose feasibility questions
 ## Review notes
 ```
 
-像“让它工作”这种弱计划会被拒绝。每一步都必须知道如何证明自己。
+“让它工作”不是计划。每一步都要知道怎么证明自己。
 
 ---
 
 ## Subagent 规则
 
-Subagent 很有用，但不能替代判断。
+Subagent 很有用，也很会说得像真的。
 
 <p align="center">
   <img src="assets/agent-stack.svg" alt="Main agent and focused subagent roles" width="100%" />
 </p>
 
-这套 workflow 会这样使用它们：
+这样用：
 
-- 一个 subagent 只做一个聚焦任务
-- prompt 里给出精确路径、命令、约束和预期输出
+- 一个 subagent 只拿一个聚焦任务
+- 给清楚路径、命令、约束和预期输出
 - implementer subagent 不 commit
 - spec review 先于 code quality review
-- 副作用由主 agent 验证
-- 主 agent 负责综合、判断和最终正确性
+- 主 Agent 亲自验证副作用
+- 主 Agent 负责综合、判断和最终正确性
 
-常用 subagent 角色：
+常见 subagent 角色：
 
 - repository scout
 - implementation worker
@@ -312,18 +306,18 @@ Subagent 很有用，但不能替代判断。
 
 ## 完成门禁
 
-在 Agent 说“完成”之前，workflow 会检查：
+Agent 说“完成”之前，先检查这些无聊但要命的事：
 
-- 测试或 smoke check 实际运行过
-- 如果无法运行测试，原因要明确
-- diff 最小，且能追溯到用户请求
+- 测试或 smoke check 真的跑过
+- 如果测试跑不了，原因说清楚
+- diff 小，而且能对应到用户请求
 - 没有无关重构或格式漂移
-- 没有自己造成的 orphan imports、文件、配置或 TODO
-- 日志、API 响应、UI 行为或测试输出支持结论
+- 没留下自己造成的 orphan imports、文件、配置或 TODO
+- 日志、API 响应、UI 行为或测试输出能支撑结论
 - 高风险改动经过独立 review
-- 可复用经验保存到了正确层级
+- 可复用经验放到了正确地方
 
-在 commit、push、ship 或 PR 前：
+commit、push、ship 或 PR 前：
 
 ```text
 targeted tests
@@ -345,7 +339,7 @@ skills/
         └── SKILL.md
 ```
 
-这个仓库刻意保持很小。它发布的是一个组合式 workflow skill，不是一堆框架代码。
+这个仓库刻意保持很小。它发布的是一个 workflow skill，不是一个框架。
 
 ---
 
@@ -353,13 +347,9 @@ skills/
 
 好的 agentic coding 不是让模型变慢。
 
-而是让模型更难被欺骗：
+而是让模型更难被骗。
 
-- 更难被模糊需求欺骗
-- 更难被没有证明力的 passing tests 欺骗
-- 更难被看似合理的 subagent 汇报欺骗
-- 更难被掩盖症状的补丁欺骗
-- 更难被看起来很有效率的大 diff 欺骗
+更难被模糊需求骗。更难被没什么证明力的 passing tests 骗。更难被看似合理的 subagent 汇报骗。更难被遮住症状的补丁骗。更难被看起来很努力的大 diff 骗。
 
 小事足够小时就保持小。事情可能伤到你时，就系统化处理。
 

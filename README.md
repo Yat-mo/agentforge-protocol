@@ -1,11 +1,11 @@
 # AgentForge Protocol
 
 <p align="center">
-  <strong>A verification-first coding protocol for autonomous coding agents.</strong>
+  <strong>A coding protocol for agents that need proof, not vibes.</strong>
 </p>
 
 <p align="center">
-  <em>For Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read, edit, test, delegate, and verify.</em>
+  <em>Built for Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read files, edit code, run tests, delegate work, and check its own claims.</em>
 </p>
 
 <p align="center">
@@ -22,44 +22,38 @@
 
 ## Why this exists
 
-LLM coding agents are fast, but fast is not the same as correct.
+Coding agents are quick. That is the fun part, and also the dangerous part.
 
-The common failure modes are boring and expensive:
+They can write a patch before they understand the repo. They can produce a plan that sounds tidy but proves nothing. They can spin up subagents, accept their reports, and quietly ship a mess. Anyone who has used these tools for real work has seen some version of this.
 
-- guessing requirements instead of inspecting the codebase
-- adding abstractions nobody asked for
-- touching nearby code because it looks ugly
-- writing tests after the implementation and calling that confidence
-- debugging by stacking random patches
-- letting subagents produce unverified side effects
-- saying “done” before anything actually ran
+AgentForge Protocol is a compact operating routine for avoiding that failure mode.
 
-This skill packages a workflow designed to avoid those traps.
+It tells the agent when to stay lightweight, when to slow down, when to write tests first, when to debug instead of guessing, and when to bring in subagents without letting them drive the car.
 
-It is cautious when caution buys correctness, but it does not force heavy ceremony onto trivial edits.
+The point is simple: every meaningful step should leave evidence behind.
 
 ---
 
 ## What it combines
 
-`agentforge-protocol` acts as a router and operating layer over these skills:
+`agentforge-protocol` sits on top of a few smaller skills and decides which one should lead:
 
-- **karpathy-guidelines** — minimalism, assumptions, surgical diffs, verification.
-- **grill-plan** — clarify ambiguous or high-risk requirements before implementation.
-- **writing-plans** — turn clear requirements into executable implementation plans.
-- **test-driven-development** — RED → GREEN → REFACTOR for behavior changes.
-- **systematic-debugging** — root-cause debugging before fixes.
-- **subagent-driven-development** — fresh subagent per task, reviewed in stages.
-- **requesting-code-review** — pre-commit / pre-ship verification gate.
-- **spike** — disposable experiments for feasibility unknowns.
+- **karpathy-guidelines**, for small diffs, fewer assumptions, and less cleverness.
+- **grill-plan**, for vague or risky work that needs decisions before code.
+- **writing-plans**, for turning clear requirements into steps an agent can actually execute.
+- **test-driven-development**, for behavior changes that need a failing test before a fix.
+- **systematic-debugging**, for bugs where guessing will only make the hole deeper.
+- **subagent-driven-development**, for splitting work without losing control of the result.
+- **requesting-code-review**, for the final gate before commit, push, or ship.
+- **spike**, for questions where a disposable experiment beats another paragraph of speculation.
 
-The workflow is Hermes-native:
+The workflow uses Hermes' own layers instead of inventing extra paperwork:
 
 - current progress goes to the `todo` tool
 - non-trivial plans go to `.hermes/plans/`
-- durable user/environment facts go to memory
-- reusable workflows and traps become skills
-- project-local `tasks/lessons.md` is used only when the repo already has that convention
+- stable user or environment facts go to memory
+- repeatable procedures and traps become skills
+- project-local `tasks/lessons.md` is used only when the repo already works that way
 
 <p align="center">
   <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
@@ -69,7 +63,7 @@ The workflow is Hermes-native:
 
 ## Install
 
-Clone this repository:
+Clone the repo:
 
 ```bash
 git clone https://github.com/Yat-mo/agentforge-protocol.git
@@ -83,13 +77,13 @@ cp -R agentforge-protocol/skills/software-development/agentforge-protocol \
   ~/.hermes/skills/software-development/
 ```
 
-Start a new Hermes session so the skill loader sees it:
+Start a fresh Hermes session so the skill loader picks it up:
 
 ```bash
 hermes --skills agentforge-protocol
 ```
 
-Or inside Hermes:
+Or load it inside Hermes:
 
 ```text
 /skill agentforge-protocol
@@ -99,13 +93,13 @@ Or inside Hermes:
 
 ## Quick start
 
-Use it whenever a coding task is more than a tiny obvious edit:
+Use it when the task is bigger than a tiny, obvious edit:
 
 ```text
 Use agentforge-protocol. Add email validation to the signup flow.
 ```
 
-For an ambiguous feature:
+For an unclear feature:
 
 ```text
 Use agentforge-protocol. Design and implement workspace-level permissions.
@@ -117,7 +111,7 @@ For a bug:
 Use agentforge-protocol. The export job passes locally but fails in CI with a timezone assertion.
 ```
 
-For a feasibility question:
+For a feasibility check:
 
 ```text
 Use agentforge-protocol. Spike whether we can stream partial PDF extraction results to the UI.
@@ -127,21 +121,21 @@ Use agentforge-protocol. Spike whether we can stream partial PDF extraction resu
 
 ## The router
 
-The skill starts by classifying the work.
+The first job is to classify the work. A typo does not need a ceremony. A migration does.
 
 ### Tiny obvious edit
 
-Use only the lightweight path.
+Keep it light.
 
 ```text
 inspect → minimal patch → cheap verification → stop
 ```
 
-No forced plan. No subagents. No theater.
+No forced plan. No subagents. No theatre.
 
 ### Clear behavior change
 
-Use TDD by default.
+Use TDD unless there is a real reason not to.
 
 ```text
 read existing pattern
@@ -155,7 +149,7 @@ read existing pattern
 
 ### Ambiguous or architectural work
 
-Use grill-plan first.
+Use grill-plan before touching production code.
 
 ```text
 inspect code/docs/tests/logs
@@ -168,7 +162,7 @@ inspect code/docs/tests/logs
 
 ### Multi-task implementation
 
-Use subagent-driven development.
+Use subagents, but keep the main agent responsible.
 
 ```text
 read saved plan once
@@ -183,7 +177,7 @@ read saved plan once
 
 ### Bug or test failure
 
-Use systematic debugging.
+Debug first. Patch second.
 
 ```text
 read full error
@@ -198,7 +192,7 @@ read full error
 
 ### Feasibility unknown
 
-Use spike.
+Spike it. Do not turn uncertainty into production architecture.
 
 ```text
 decompose feasibility questions
@@ -212,7 +206,7 @@ decompose feasibility questions
 
 ## Pre-coding expectations
 
-For non-trivial production code, the workflow records this before implementation:
+For non-trivial production code, write down the expectations before coding:
 
 ```md
 ## Pre-coding expectations
@@ -221,26 +215,26 @@ For non-trivial production code, the workflow records this before implementation
 What I believe is true about the system and why this change should work.
 
 ### Success criteria
-Observable checks that prove the task is done.
+The checks that would make me comfortable saying this is done.
 
 ### Failure signals
 Independent signs that the approach is wrong or unsafe.
-These are not just "success criteria not met".
+These cannot just be "the success criteria did not pass".
 
 ### Ablations and expected observations
-What should happen if we vary a meaningful assumption or approach.
+What I expect to see if a meaningful assumption or approach changes.
 
 ### Minimal verification path
 The cheapest test, command, API call, UI action, or log check that proves the change.
 ```
 
-This is the piece that keeps the agent from coding on vibes.
+This is the part that keeps the agent honest. Not fancy, just useful.
 
 ---
 
 ## Plan shape
 
-Non-trivial plans are saved under `.hermes/plans/` and use action → verification steps.
+Non-trivial plans live under `.hermes/plans/` and use action → verification steps.
 
 ```md
 # <Task> Implementation Plan
@@ -278,26 +272,26 @@ Non-trivial plans are saved under `.hermes/plans/` and use action → verificati
 ## Review notes
 ```
 
-Weak plans like “make it work” are rejected. Every step must know how it will prove itself.
+A plan that says "make it work" is not a plan. Each step needs a way to prove itself.
 
 ---
 
 ## Subagent rules
 
-Subagents are useful, but they are not a replacement for judgment.
+Subagents are useful. They are also very good at sounding confident.
 
 <p align="center">
   <img src="assets/agent-stack.svg" alt="Main agent and focused subagent roles" width="100%" />
 </p>
 
-The workflow uses them like this:
+Use them like this:
 
-- one subagent, one focused task
-- exact paths, commands, constraints, and expected output in the prompt
+- one subagent gets one focused task
+- include exact paths, commands, constraints, and expected output
 - implementer subagents do not commit
 - spec review happens before code quality review
-- side effects are verified by the main agent
-- the main agent owns synthesis and final correctness
+- the main agent verifies side effects
+- the main agent owns synthesis, judgment, and final correctness
 
 Good subagent roles:
 
@@ -312,16 +306,16 @@ Good subagent roles:
 
 ## Completion gate
 
-Before the agent says “done”, the workflow checks:
+Before the agent says "done", check the boring stuff:
 
 - tests or smoke checks actually ran
-- if tests could not run, the reason is explicit
-- diff is minimal and traceable to the request
-- no unrelated refactor or formatting drift
-- no orphan imports, files, configs, or TODOs from the change
+- if tests could not run, the reason is clear
+- the diff is small and tied to the request
+- there is no unrelated refactor or formatting drift
+- the change did not leave behind orphan imports, files, configs, or TODOs
 - logs, API responses, UI behavior, or test output support the claim
-- high-risk changes got independent review
-- reusable lessons were saved to the right layer
+- risky changes got independent review
+- reusable lessons were saved in the right place
 
 Before commit, push, ship, or PR:
 
@@ -345,7 +339,7 @@ skills/
         └── SKILL.md
 ```
 
-This repository is intentionally small. It ships one compositional workflow skill, not a pile of framework code.
+The repo is intentionally small. It ships one workflow skill, not a framework.
 
 ---
 
@@ -353,13 +347,9 @@ This repository is intentionally small. It ships one compositional workflow skil
 
 Good agentic coding is not about making the model slower.
 
-It is about making the model harder to fool:
+It is about making the model harder to fool.
 
-- harder to fool by ambiguous requirements
-- harder to fool by passing tests that prove nothing
-- harder to fool by a plausible subagent report
-- harder to fool by a patch that hides the symptom
-- harder to fool by a big diff that feels productive
+Harder to fool with vague requirements. Harder to fool with tests that pass but prove nothing. Harder to fool with a plausible subagent report. Harder to fool with a patch that hides the symptom. Harder to fool with a big diff that feels productive.
 
 Small when small is enough. Systematic when the work can hurt you.
 
