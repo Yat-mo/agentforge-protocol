@@ -9,6 +9,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Yat-mo/agentforge-protocol"><img alt="GitHub repo" src="https://img.shields.io/badge/repo-agentforge--protocol-2f2a25?style=flat-square"></a>
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-c7a27a?style=flat-square">
+  <img alt="Agents" src="https://img.shields.io/badge/agents-Hermes%20%7C%20OpenClaw%20%7C%20Claude%20Code%20%7C%20Codex%20CLI-8e6f52?style=flat-square">
+</p>
+
+<p align="center">
   <a href="README.md">English</a> ·
   <a href="README.zh-CN.md">简体中文</a> ·
   <a href="README.zh-TW.md">繁體中文</a>
@@ -18,34 +24,53 @@
   <img src="assets/agentforge-hero.svg" alt="AgentForge Protocol hero" width="100%" />
 </p>
 
+> 编程 Agent 很快。这是好玩的地方，也是危险的地方。AgentForge Protocol 保留速度，但要求每一步都留下证据。
+
 ---
 
 ## 为什么需要它
 
-编程 Agent 很快。这是好玩的地方，也是危险的地方。
+它们可以在还没理解仓库前就写出 patch。可以生成一份看起来很整齐、但其实什么也证明不了的计划。可以开几个 subagent，收下它们的汇报，然后悄悄把一坨东西 ship 出去。
 
-它们可以在还没理解仓库前就写出 patch。可以生成一份看起来很整齐、但其实什么也证明不了的计划。可以开几个 subagent，收下它们的汇报，然后悄悄把一坨东西 ship 出去。真正用这些工具干过活的人，大概都见过某个版本的这种场面。
+真正用这些工具干过活的人，大概都见过某个版本的这种场面。
 
-AgentForge Protocol 是一套很小的操作习惯，用来避开这种坑。
+AgentForge Protocol 是一套很小的操作习惯，用来避开这种坑。它告诉 Agent 什么时候保持轻量，什么时候该慢下来，什么时候先写测试，什么时候应该 debug 而不是猜，什么时候可以派 subagent，但不能把方向盘交出去。
 
-它告诉 Agent 什么时候保持轻量，什么时候该慢下来，什么时候先写测试，什么时候应该 debug 而不是猜，什么时候可以派 subagent，但不能把方向盘交出去。
+**核心很简单：有意义的步骤，最后都要留下证据。**
 
-核心很简单：有意义的步骤，最后都要留下证据。
+---
+
+## 一眼看懂
+
+| 如果任务是... | 协议会这样处理 |
+| --- | --- |
+| 很小、很明显 | inspect，patch，跑最便宜的有效检查，然后停 |
+| 清晰的行为改动 | 先写失败测试，再让它通过 |
+| 模糊或架构类 | 先 inspect，再追问关键决定，最后保存计划 |
+| 多步骤任务 | 拆任务，用聚焦 subagent，分阶段 review |
+| bug 或测试失败 | 复现，追根因，加 regression test |
+| 不确定能不能做 | 先 spike，不要直接写进 production architecture |
+
+<p align="center">
+  <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
+</p>
 
 ---
 
 ## 它组合了什么
 
-`agentforge-protocol` 站在几个更小的 skill 之上，决定当前该由谁主导：
+`agentforge-protocol` 站在几个更小的 skill 之上，决定当前该由谁主导。
 
-- **karpathy-guidelines**，小 diff，少假设，少耍聪明。
-- **grill-plan**，需求模糊或风险高时，先把决定问清楚再写代码。
-- **writing-plans**，把清晰需求变成 Agent 真能执行的步骤。
-- **test-driven-development**，行为改动先有失败测试，再有修复。
-- **systematic-debugging**，bug 先找根因，不靠猜。
-- **subagent-driven-development**，拆任务可以，但不能丢掉控制权。
-- **requesting-code-review**，commit、push、ship 前的最后一道门。
-- **spike**，不确定能不能做时，先做一个能丢的实验，比继续空谈强。
+| Skill | 负责什么 |
+| --- | --- |
+| `karpathy-guidelines` | 小 diff，少假设，少耍聪明 |
+| `grill-plan` | 需求模糊或风险高时，先做决定再写代码 |
+| `writing-plans` | 把清晰需求变成 Agent 真能执行的步骤 |
+| `test-driven-development` | 行为改动先有失败测试，再有修复 |
+| `systematic-debugging` | patch 前先找根因 |
+| `subagent-driven-development` | 拆任务，但不丢掉控制权 |
+| `requesting-code-review` | commit、push、ship 前的最后一道门 |
+| `spike` | 不确定时先做能丢的实验 |
 
 它用 Hermes 自己的层级，不额外制造文档垃圾：
 
@@ -55,23 +80,12 @@ AgentForge Protocol 是一套很小的操作习惯，用来避开这种坑。
 - 可重复的流程和坑点变成 skill
 - 只有仓库本来就这么做时，才使用项目里的 `tasks/lessons.md`
 
-<p align="center">
-  <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
-</p>
-
 ---
 
 ## 安装
 
-克隆仓库：
-
 ```bash
 git clone https://github.com/Yat-mo/agentforge-protocol.git
-```
-
-把 skill 复制到 Hermes skills 目录：
-
-```bash
 mkdir -p ~/.hermes/skills/software-development
 cp -R agentforge-protocol/skills/software-development/agentforge-protocol \
   ~/.hermes/skills/software-development/
@@ -93,25 +107,17 @@ hermes --skills agentforge-protocol
 
 ## 快速开始
 
-当任务不只是一个很明显的小改动时，用它：
-
 ```text
 Use agentforge-protocol. Add email validation to the signup flow.
 ```
-
-需求还不清楚时：
 
 ```text
 Use agentforge-protocol. Design and implement workspace-level permissions.
 ```
 
-遇到 bug 时：
-
 ```text
 Use agentforge-protocol. The export job passes locally but fails in CI with a timezone assertion.
 ```
-
-想先确认可不可行时：
 
 ```text
 Use agentforge-protocol. Spike whether we can stream partial PDF extraction results to the UI.
@@ -123,7 +129,8 @@ Use agentforge-protocol. Spike whether we can stream partial PDF extraction resu
 
 第一步是判断任务类型。错字不需要仪式感，迁移就需要。
 
-### 琐碎且明显的改动
+<details open>
+<summary><strong>琐碎且明显的改动</strong></summary>
 
 轻处理。
 
@@ -133,7 +140,10 @@ inspect → minimal patch → cheap verification → stop
 
 不强行写计划。不强行派 subagent。不演流程。
 
-### 清晰的行为改动
+</details>
+
+<details open>
+<summary><strong>清晰的行为改动</strong></summary>
 
 默认走 TDD，除非真的有理由不走。
 
@@ -147,7 +157,10 @@ read existing pattern
 → run relevant regression
 ```
 
-### 模糊或架构类任务
+</details>
+
+<details open>
+<summary><strong>模糊或架构类任务</strong></summary>
 
 碰 production code 前，先用 grill-plan。
 
@@ -160,7 +173,10 @@ inspect code/docs/tests/logs
 → implement from the plan
 ```
 
-### 多任务实现
+</details>
+
+<details open>
+<summary><strong>多任务实现</strong></summary>
 
 可以用 subagent，但主 Agent 仍然负责结果。
 
@@ -175,7 +191,10 @@ read saved plan once
 → pre-commit gate
 ```
 
-### Bug 或测试失败
+</details>
+
+<details open>
+<summary><strong>Bug 或测试失败</strong></summary>
 
 先 debug，再 patch。
 
@@ -190,7 +209,10 @@ read full error
 → verify
 ```
 
-### 可行性未知
+</details>
+
+<details open>
+<summary><strong>可行性未知</strong></summary>
 
 先 spike。不要把不确定性直接写进 production architecture。
 
@@ -201,6 +223,8 @@ decompose feasibility questions
 → record VALIDATED / PARTIAL / INVALIDATED
 → only then plan production work
 ```
+
+</details>
 
 ---
 
@@ -284,23 +308,15 @@ Subagent 很有用，也很会说得像真的。
   <img src="assets/agent-stack.svg" alt="Main agent and focused subagent roles" width="100%" />
 </p>
 
-这样用：
+| 规则 | 为什么重要 |
+| --- | --- |
+| 一个 subagent 只拿一个聚焦任务 | 宽泛 prompt 会产出宽泛结果 |
+| 给清楚路径、命令、约束和预期输出 | fresh context 需要真实上下文 |
+| implementer subagent 不 commit | 最终状态由主 Agent 负责 |
+| spec review 先于 code quality review | 先确认有没有做对事 |
+| 主 Agent 亲自验证副作用 | 自述不是证据 |
 
-- 一个 subagent 只拿一个聚焦任务
-- 给清楚路径、命令、约束和预期输出
-- implementer subagent 不 commit
-- spec review 先于 code quality review
-- 主 Agent 亲自验证副作用
-- 主 Agent 负责综合、判断和最终正确性
-
-常见 subagent 角色：
-
-- repository scout
-- implementation worker
-- spec compliance reviewer
-- code quality reviewer
-- debugging investigator
-- integration reviewer
+常见 subagent 角色：repository scout、implementation worker、spec compliance reviewer、code quality reviewer、debugging investigator、integration reviewer。
 
 ---
 

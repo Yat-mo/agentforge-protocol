@@ -5,7 +5,13 @@
 </p>
 
 <p align="center">
-  <em>Built for Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read files, edit code, run tests, delegate work, and check its own claims.</em>
+  <em>For Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read files, edit code, run tests, delegate work, and check its own claims.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Yat-mo/agentforge-protocol"><img alt="GitHub repo" src="https://img.shields.io/badge/repo-agentforge--protocol-2f2a25?style=flat-square"></a>
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-c7a27a?style=flat-square">
+  <img alt="Agents" src="https://img.shields.io/badge/agents-Hermes%20%7C%20OpenClaw%20%7C%20Claude%20Code%20%7C%20Codex%20CLI-8e6f52?style=flat-square">
 </p>
 
 <p align="center">
@@ -18,42 +24,32 @@
   <img src="assets/agentforge-hero.svg" alt="AgentForge Protocol hero" width="100%" />
 </p>
 
+> Coding agents are quick. That is the fun part, and also the dangerous part. AgentForge Protocol keeps the speed, but forces the work to leave evidence behind.
+
 ---
 
 ## Why this exists
 
-Coding agents are quick. That is the fun part, and also the dangerous part.
+Agents can write a patch before they understand the repo. They can produce a plan that sounds tidy but proves nothing. They can spin up subagents, accept their reports, and quietly ship a mess.
 
-They can write a patch before they understand the repo. They can produce a plan that sounds tidy but proves nothing. They can spin up subagents, accept their reports, and quietly ship a mess. Anyone who has used these tools for real work has seen some version of this.
+Anyone who has used these tools for real work has seen some version of this.
 
-AgentForge Protocol is a compact operating routine for avoiding that failure mode.
+AgentForge Protocol is a small operating routine for avoiding that failure mode. It tells the agent when to stay lightweight, when to slow down, when to write tests first, when to debug instead of guessing, and when to bring in subagents without letting them drive the car.
 
-It tells the agent when to stay lightweight, when to slow down, when to write tests first, when to debug instead of guessing, and when to bring in subagents without letting them drive the car.
-
-The point is simple: every meaningful step should leave evidence behind.
+**The point is simple: every meaningful step should leave evidence behind.**
 
 ---
 
-## What it combines
+## At a glance
 
-`agentforge-protocol` sits on top of a few smaller skills and decides which one should lead:
-
-- **karpathy-guidelines**, for small diffs, fewer assumptions, and less cleverness.
-- **grill-plan**, for vague or risky work that needs decisions before code.
-- **writing-plans**, for turning clear requirements into steps an agent can actually execute.
-- **test-driven-development**, for behavior changes that need a failing test before a fix.
-- **systematic-debugging**, for bugs where guessing will only make the hole deeper.
-- **subagent-driven-development**, for splitting work without losing control of the result.
-- **requesting-code-review**, for the final gate before commit, push, or ship.
-- **spike**, for questions where a disposable experiment beats another paragraph of speculation.
-
-The workflow uses Hermes' own layers instead of inventing extra paperwork:
-
-- current progress goes to the `todo` tool
-- non-trivial plans go to `.hermes/plans/`
-- stable user or environment facts go to memory
-- repeatable procedures and traps become skills
-- project-local `tasks/lessons.md` is used only when the repo already works that way
+| If the task is... | The protocol does this |
+| --- | --- |
+| tiny and obvious | inspect, patch, run the cheapest useful check, stop |
+| a clear behavior change | write the failing test first, then make it pass |
+| vague or architectural | inspect first, grill the open decisions, save a plan |
+| multi-step | split tasks, use focused subagents, review in stages |
+| a bug or test failure | reproduce, trace root cause, add a regression test |
+| uncertain | spike it before it becomes production architecture |
 
 <p align="center">
   <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
@@ -61,17 +57,35 @@ The workflow uses Hermes' own layers instead of inventing extra paperwork:
 
 ---
 
-## Install
+## What it combines
 
-Clone the repo:
+`agentforge-protocol` sits on top of a few smaller skills and decides which one should lead.
+
+| Skill | Job |
+| --- | --- |
+| `karpathy-guidelines` | small diffs, fewer assumptions, less cleverness |
+| `grill-plan` | decisions before code when the task is vague or risky |
+| `writing-plans` | clear requirements turned into executable steps |
+| `test-driven-development` | behavior changes with a failing test before the fix |
+| `systematic-debugging` | root cause before patches |
+| `subagent-driven-development` | split work without losing control of the result |
+| `requesting-code-review` | final gate before commit, push, or ship |
+| `spike` | disposable experiments when guessing is worse than building |
+
+It uses Hermes' own layers instead of inventing extra paperwork:
+
+- current progress goes to the `todo` tool
+- non-trivial plans go to `.hermes/plans/`
+- stable user or environment facts go to memory
+- repeatable procedures and traps become skills
+- project-local `tasks/lessons.md` is used only when the repo already works that way
+
+---
+
+## Install
 
 ```bash
 git clone https://github.com/Yat-mo/agentforge-protocol.git
-```
-
-Copy the skill into your Hermes skills directory:
-
-```bash
 mkdir -p ~/.hermes/skills/software-development
 cp -R agentforge-protocol/skills/software-development/agentforge-protocol \
   ~/.hermes/skills/software-development/
@@ -93,25 +107,17 @@ Or load it inside Hermes:
 
 ## Quick start
 
-Use it when the task is bigger than a tiny, obvious edit:
-
 ```text
 Use agentforge-protocol. Add email validation to the signup flow.
 ```
-
-For an unclear feature:
 
 ```text
 Use agentforge-protocol. Design and implement workspace-level permissions.
 ```
 
-For a bug:
-
 ```text
 Use agentforge-protocol. The export job passes locally but fails in CI with a timezone assertion.
 ```
-
-For a feasibility check:
 
 ```text
 Use agentforge-protocol. Spike whether we can stream partial PDF extraction results to the UI.
@@ -123,7 +129,8 @@ Use agentforge-protocol. Spike whether we can stream partial PDF extraction resu
 
 The first job is to classify the work. A typo does not need a ceremony. A migration does.
 
-### Tiny obvious edit
+<details open>
+<summary><strong>Tiny obvious edit</strong></summary>
 
 Keep it light.
 
@@ -133,7 +140,10 @@ inspect → minimal patch → cheap verification → stop
 
 No forced plan. No subagents. No theatre.
 
-### Clear behavior change
+</details>
+
+<details open>
+<summary><strong>Clear behavior change</strong></summary>
 
 Use TDD unless there is a real reason not to.
 
@@ -147,7 +157,10 @@ read existing pattern
 → run relevant regression
 ```
 
-### Ambiguous or architectural work
+</details>
+
+<details open>
+<summary><strong>Ambiguous or architectural work</strong></summary>
 
 Use grill-plan before touching production code.
 
@@ -160,7 +173,10 @@ inspect code/docs/tests/logs
 → implement from the plan
 ```
 
-### Multi-task implementation
+</details>
+
+<details open>
+<summary><strong>Multi-task implementation</strong></summary>
 
 Use subagents, but keep the main agent responsible.
 
@@ -175,7 +191,10 @@ read saved plan once
 → pre-commit gate
 ```
 
-### Bug or test failure
+</details>
+
+<details open>
+<summary><strong>Bug or test failure</strong></summary>
 
 Debug first. Patch second.
 
@@ -190,7 +209,10 @@ read full error
 → verify
 ```
 
-### Feasibility unknown
+</details>
+
+<details open>
+<summary><strong>Feasibility unknown</strong></summary>
 
 Spike it. Do not turn uncertainty into production architecture.
 
@@ -201,6 +223,8 @@ decompose feasibility questions
 → record VALIDATED / PARTIAL / INVALIDATED
 → only then plan production work
 ```
+
+</details>
 
 ---
 
@@ -286,21 +310,15 @@ Subagents are useful. They are also very good at sounding confident.
 
 Use them like this:
 
-- one subagent gets one focused task
-- include exact paths, commands, constraints, and expected output
-- implementer subagents do not commit
-- spec review happens before code quality review
-- the main agent verifies side effects
-- the main agent owns synthesis, judgment, and final correctness
+| Rule | Why it matters |
+| --- | --- |
+| one subagent gets one focused task | broad prompts create vague work |
+| include exact paths, commands, constraints, and expected output | fresh context needs real context |
+| implementer subagents do not commit | the main agent owns the final state |
+| spec review happens before code quality review | first ask if we built the right thing |
+| the main agent verifies side effects | self-reports are not proof |
 
-Good subagent roles:
-
-- repository scout
-- implementation worker
-- spec compliance reviewer
-- code quality reviewer
-- debugging investigator
-- integration reviewer
+Good subagent roles: repository scout, implementation worker, spec compliance reviewer, code quality reviewer, debugging investigator, integration reviewer.
 
 ---
 
