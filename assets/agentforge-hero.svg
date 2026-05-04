@@ -1,0 +1,42 @@
+<svg width="1200" height="520" viewBox="0 0 1200 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">AgentForge Protocol hero</title>
+  <desc id="desc">A minimal warm diagram showing autonomous coding agents moving from intent to verified code.</desc>
+  <rect width="1200" height="520" rx="36" fill="#F7F1E8"/>
+  <circle cx="1020" cy="96" r="170" fill="#E8D9C5" opacity="0.55"/>
+  <circle cx="158" cy="420" r="190" fill="#EFE1D2" opacity="0.65"/>
+  <path d="M156 258C252 160 364 126 492 156C592 180 654 252 748 286C840 320 942 300 1046 222" stroke="#C7A27A" stroke-width="3" stroke-linecap="round" stroke-dasharray="9 14" opacity="0.75"/>
+
+  <g filter="url(#shadow)">
+    <rect x="106" y="112" width="246" height="162" rx="28" fill="#FFFDF8"/>
+    <text x="138" y="158" fill="#3A332C" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="700">Intent</text>
+    <text x="138" y="194" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Read the repo.</text>
+    <text x="138" y="222" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Surface assumptions.</text>
+    <text x="138" y="250" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Define success.</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="477" y="70" width="246" height="162" rx="28" fill="#FFFDF8"/>
+    <text x="509" y="116" fill="#3A332C" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="700">Protocol</text>
+    <text x="509" y="152" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Plan → TDD</text>
+    <text x="509" y="180" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Debug → Delegate</text>
+    <text x="509" y="208" fill="#766B5F" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Review → Verify</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="848" y="174" width="246" height="162" rx="28" fill="#2F2A25"/>
+    <text x="880" y="220" fill="#FFF7EA" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="700">Verified Code</text>
+    <text x="880" y="256" fill="#DCCAB4" font-family="Inter, ui-sans-serif, system-ui" font-size="17">Every step ends</text>
+    <text x="880" y="284" fill="#DCCAB4" font-family="Inter, ui-sans-serif, system-ui" font-size="17">with evidence.</text>
+  </g>
+
+  <g>
+    <rect x="382" y="333" width="438" height="78" rx="24" fill="#EFE3D5" stroke="#D7BFA5"/>
+    <text x="426" y="381" fill="#4B4035" font-family="Inter, ui-sans-serif, system-ui" font-size="20" font-weight="650">Hermes · OpenClaw · Claude Code · Codex CLI</text>
+  </g>
+
+  <defs>
+    <filter id="shadow" x="70" y="34" width="1060" height="338" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#8B735B" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+</svg>

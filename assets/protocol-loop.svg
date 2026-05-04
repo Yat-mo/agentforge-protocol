@@ -1,0 +1,30 @@
+<svg width="1200" height="360" viewBox="0 0 1200 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">AgentForge protocol loop</title>
+  <desc id="desc">A minimal loop diagram showing plan, test, implement, review, verify.</desc>
+  <rect width="1200" height="360" rx="32" fill="#FBF7F0"/>
+  <path d="M246 180C246 120 294 72 354 72H846C906 72 954 120 954 180C954 240 906 288 846 288H354C294 288 246 240 246 180Z" stroke="#CFB69B" stroke-width="3"/>
+  <path d="M932 136L964 180L932 224" stroke="#8E6F52" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M268 224L236 180L268 136" stroke="#8E6F52" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g font-family="Inter, ui-sans-serif, system-ui" text-anchor="middle">
+    <circle cx="354" cy="180" r="58" fill="#FFFDF8" stroke="#E0C9AF"/>
+    <text x="354" y="173" fill="#2F2A25" font-size="21" font-weight="700">Plan</text>
+    <text x="354" y="200" fill="#75695D" font-size="14">decide</text>
+
+    <circle cx="477" cy="180" r="58" fill="#FFFDF8" stroke="#E0C9AF"/>
+    <text x="477" y="173" fill="#2F2A25" font-size="21" font-weight="700">Test</text>
+    <text x="477" y="200" fill="#75695D" font-size="14">RED</text>
+
+    <circle cx="600" cy="180" r="58" fill="#2F2A25" stroke="#2F2A25"/>
+    <text x="600" y="173" fill="#FFF7EA" font-size="21" font-weight="700">Build</text>
+    <text x="600" y="200" fill="#DCCAB4" font-size="14">GREEN</text>
+
+    <circle cx="723" cy="180" r="58" fill="#FFFDF8" stroke="#E0C9AF"/>
+    <text x="723" y="173" fill="#2F2A25" font-size="21" font-weight="700">Review</text>
+    <text x="723" y="200" fill="#75695D" font-size="14">fresh eyes</text>
+
+    <circle cx="846" cy="180" r="58" fill="#FFFDF8" stroke="#E0C9AF"/>
+    <text x="846" y="173" fill="#2F2A25" font-size="21" font-weight="700">Verify</text>
+    <text x="846" y="200" fill="#75695D" font-size="14">evidence</text>
+  </g>
+</svg>

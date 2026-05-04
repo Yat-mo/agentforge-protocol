@@ -8,6 +8,16 @@
   <em>For Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read, edit, test, delegate, and verify.</em>
 </p>
 
+<p align="center">
+  <a href="README.md">English</a> ·
+  <a href="README.zh-CN.md">简体中文</a> ·
+  <a href="README.zh-TW.md">繁體中文</a>
+</p>
+
+<p align="center">
+  <img src="assets/agentforge-hero.svg" alt="AgentForge Protocol hero" width="100%" />
+</p>
+
 ---
 
 ## Why this exists
@@ -50,6 +60,10 @@ The workflow is Hermes-native:
 - durable user/environment facts go to memory
 - reusable workflows and traps become skills
 - project-local `tasks/lessons.md` is used only when the repo already has that convention
+
+<p align="center">
+  <img src="assets/protocol-loop.svg" alt="Plan, test, build, review, verify loop" width="100%" />
+</p>
 
 ---
 
@@ -271,6 +285,10 @@ Weak plans like “make it work” are rejected. Every step must know how it wil
 ## Subagent rules
 
 Subagents are useful, but they are not a replacement for judgment.
+
+<p align="center">
+  <img src="assets/agent-stack.svg" alt="Main agent and focused subagent roles" width="100%" />
+</p>
 
 The workflow uses them like this:
 
