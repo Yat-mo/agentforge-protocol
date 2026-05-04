@@ -1,4 +1,4 @@
-# Hermes Coding Workflow Skill
+# Hermes Code Forge
 
 <p align="center">
   <strong>A complete, verification-first coding workflow for Hermes Agent.</strong>
@@ -32,7 +32,7 @@ It is cautious when caution buys correctness, but it does not force heavy ceremo
 
 ## What it combines
 
-`hermes-coding-workflow` acts as a router and operating layer over these skills:
+`hermes-code-forge` acts as a router and operating layer over these skills:
 
 - **karpathy-guidelines** — minimalism, assumptions, surgical diffs, verification.
 - **grill-plan** — clarify ambiguous or high-risk requirements before implementation.
@@ -58,27 +58,27 @@ The workflow is Hermes-native:
 Clone this repository:
 
 ```bash
-git clone https://github.com/Yat-mo/hermes-coding-workflow-skill.git
+git clone https://github.com/Yat-mo/hermes-code-forge.git
 ```
 
 Copy the skill into your Hermes skills directory:
 
 ```bash
 mkdir -p ~/.hermes/skills/software-development
-cp -R hermes-coding-workflow-skill/skills/software-development/hermes-coding-workflow \
+cp -R hermes-code-forge/skills/software-development/hermes-code-forge \
   ~/.hermes/skills/software-development/
 ```
 
 Start a new Hermes session so the skill loader sees it:
 
 ```bash
-hermes --skills hermes-coding-workflow
+hermes --skills hermes-code-forge
 ```
 
 Or inside Hermes:
 
 ```text
-/skill hermes-coding-workflow
+/skill hermes-code-forge
 ```
 
 ---
@@ -88,25 +88,25 @@ Or inside Hermes:
 Use it whenever a coding task is more than a tiny obvious edit:
 
 ```text
-Use hermes-coding-workflow. Add email validation to the signup flow.
+Use hermes-code-forge. Add email validation to the signup flow.
 ```
 
 For an ambiguous feature:
 
 ```text
-Use hermes-coding-workflow. Design and implement workspace-level permissions.
+Use hermes-code-forge. Design and implement workspace-level permissions.
 ```
 
 For a bug:
 
 ```text
-Use hermes-coding-workflow. The export job passes locally but fails in CI with a timezone assertion.
+Use hermes-code-forge. The export job passes locally but fails in CI with a timezone assertion.
 ```
 
 For a feasibility question:
 
 ```text
-Use hermes-coding-workflow. Spike whether we can stream partial PDF extraction results to the UI.
+Use hermes-code-forge. Spike whether we can stream partial PDF extraction results to the UI.
 ```
 
 ---
@@ -323,7 +323,7 @@ targeted tests
 ```text
 skills/
 └── software-development/
-    └── hermes-coding-workflow/
+    └── hermes-code-forge/
         └── SKILL.md
 ```
 

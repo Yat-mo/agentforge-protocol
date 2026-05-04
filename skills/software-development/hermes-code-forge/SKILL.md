@@ -1,5 +1,5 @@
 ---
-name: hermes-coding-workflow
+name: hermes-code-forge
 description: Use when doing non-trivial coding with Hermes Agent. Orchestrates Karpathy-style minimal-change discipline, grill-plan intake, TDD, systematic debugging, subagent-driven implementation, spikes, and pre-commit review into one end-to-end workflow.
 version: 1.0.0
 author: Hermes Agent
@@ -10,7 +10,7 @@ metadata:
     related_skills: [karpathy-guidelines, grill-plan, writing-plans, test-driven-development, systematic-debugging, subagent-driven-development, requesting-code-review, spike]
 ---
 
-# Hermes Coding Workflow
+# Hermes Code Forge
 
 ## Overview
 
