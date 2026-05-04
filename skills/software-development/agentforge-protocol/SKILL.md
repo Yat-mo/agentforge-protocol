@@ -1,6 +1,6 @@
 ---
-name: hermes-code-forge
-description: Use when doing non-trivial coding with Hermes Agent. Orchestrates Karpathy-style minimal-change discipline, grill-plan intake, TDD, systematic debugging, subagent-driven implementation, spikes, and pre-commit review into one end-to-end workflow.
+name: agentforge-protocol
+description: Use when doing non-trivial coding with Hermes, OpenClaw, Claude Code, Codex CLI, or similar autonomous coding agents. Orchestrates Karpathy-style minimal-change discipline, grill-plan intake, TDD, systematic debugging, subagent-driven implementation, spikes, and pre-commit review into one end-to-end workflow.
 version: 1.0.0
 author: Hermes Agent
 license: MIT
@@ -10,11 +10,11 @@ metadata:
     related_skills: [karpathy-guidelines, grill-plan, writing-plans, test-driven-development, systematic-debugging, subagent-driven-development, requesting-code-review, spike]
 ---
 
-# Hermes Code Forge
+# AgentForge Protocol
 
 ## Overview
 
-This skill is an end-to-end coding workflow for Hermes Agent. It combines several focused skills into one operating system:
+This skill is an end-to-end coding protocol for autonomous coding agents such as Hermes, OpenClaw, Claude Code, and Codex CLI. It combines several focused skills into one operating system:
 
 - `karpathy-guidelines` for judgment, minimalism, and surgical changes.
 - `grill-plan` for clarifying ambiguous or high-risk work before implementation.

@@ -1,11 +1,11 @@
-# Hermes Code Forge
+# AgentForge Protocol
 
 <p align="center">
-  <strong>A complete, verification-first coding workflow for Hermes Agent.</strong>
+  <strong>A verification-first coding protocol for autonomous coding agents.</strong>
 </p>
 
 <p align="center">
-  <em>Karpathy-style engineering discipline, grill-plan intake, TDD, systematic debugging, subagent orchestration, spikes, and pre-commit review in one reusable skill.</em>
+  <em>For Hermes, OpenClaw, Claude Code, Codex CLI, and any agent that can read, edit, test, delegate, and verify.</em>
 </p>
 
 ---
@@ -32,7 +32,7 @@ It is cautious when caution buys correctness, but it does not force heavy ceremo
 
 ## What it combines
 
-`hermes-code-forge` acts as a router and operating layer over these skills:
+`agentforge-protocol` acts as a router and operating layer over these skills:
 
 - **karpathy-guidelines** — minimalism, assumptions, surgical diffs, verification.
 - **grill-plan** — clarify ambiguous or high-risk requirements before implementation.
@@ -58,27 +58,27 @@ The workflow is Hermes-native:
 Clone this repository:
 
 ```bash
-git clone https://github.com/Yat-mo/hermes-code-forge.git
+git clone https://github.com/Yat-mo/agentforge-protocol.git
 ```
 
 Copy the skill into your Hermes skills directory:
 
 ```bash
 mkdir -p ~/.hermes/skills/software-development
-cp -R hermes-code-forge/skills/software-development/hermes-code-forge \
+cp -R agentforge-protocol/skills/software-development/agentforge-protocol \
   ~/.hermes/skills/software-development/
 ```
 
 Start a new Hermes session so the skill loader sees it:
 
 ```bash
-hermes --skills hermes-code-forge
+hermes --skills agentforge-protocol
 ```
 
 Or inside Hermes:
 
 ```text
-/skill hermes-code-forge
+/skill agentforge-protocol
 ```
 
 ---
@@ -88,25 +88,25 @@ Or inside Hermes:
 Use it whenever a coding task is more than a tiny obvious edit:
 
 ```text
-Use hermes-code-forge. Add email validation to the signup flow.
+Use agentforge-protocol. Add email validation to the signup flow.
 ```
 
 For an ambiguous feature:
 
 ```text
-Use hermes-code-forge. Design and implement workspace-level permissions.
+Use agentforge-protocol. Design and implement workspace-level permissions.
 ```
 
 For a bug:
 
 ```text
-Use hermes-code-forge. The export job passes locally but fails in CI with a timezone assertion.
+Use agentforge-protocol. The export job passes locally but fails in CI with a timezone assertion.
 ```
 
 For a feasibility question:
 
 ```text
-Use hermes-code-forge. Spike whether we can stream partial PDF extraction results to the UI.
+Use agentforge-protocol. Spike whether we can stream partial PDF extraction results to the UI.
 ```
 
 ---
@@ -323,7 +323,7 @@ targeted tests
 ```text
 skills/
 └── software-development/
-    └── hermes-code-forge/
+    └── agentforge-protocol/
         └── SKILL.md
 ```
 
