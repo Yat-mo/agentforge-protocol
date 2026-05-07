@@ -25,6 +25,8 @@ This skill is an end-to-end coding protocol for autonomous coding agents such as
 - `requesting-code-review` for the pre-commit or pre-ship gate.
 - `spike` for disposable feasibility experiments before real builds.
 
+It also absorbs the strongest parts of architecture-driven governance: baseline-first reading, impact-aware framing, fresh evidence before claims, fix-lane plus retirement-lane tracking, and long-task checkpoints with drift checks.
+
 The goal is not ceremony. The goal is fewer wrong assumptions, smaller diffs, less overengineering, and more work that is actually verified before it is called done.
 
 ## When to Use
@@ -92,12 +94,13 @@ Use:
 Process:
 
 1. Read the existing pattern and tests.
-2. State hypothesis, success criteria, independent failure signals, and minimal verification path.
-3. Write or update the failing test first when behavior changes.
-4. Run the test and verify RED.
-5. Implement the smallest code to make it pass.
-6. Run the specific test and relevant regression tests.
-7. Clean only your own orphan imports, variables, or helper code.
+2. State baseline read set, hypothesis, success criteria, independent failure signals, evidence plan, and minimal verification path.
+3. For bug fixes, refactors, contract changes, or governance cleanup, track both fix lane and retirement lane.
+4. Write or update the failing test first when behavior changes.
+5. Run the test and verify RED.
+6. Implement the smallest code to make it pass.
+7. Run the specific test and relevant regression tests.
+8. Clean only your own orphan imports, variables, or helper code.
 
 ### Ambiguous or architectural work
 
@@ -196,6 +199,10 @@ Before writing production code for non-trivial work, record this section in the 
 ```md
 ## Pre-coding expectations
 
+### Baseline read set
+
+The source of truth, architecture boundaries, owners, impact surface, compatibility constraints, and verification entry points to inspect before editing.
+
 ### Hypothesis
 
 What I believe is true about the system and why this change should work.
@@ -211,6 +218,10 @@ Independent signs that the approach is wrong or unsafe. Do not phrase these as m
 ### Ablations and expected observations
 
 For each meaningful alternative or variable, what I expect to observe.
+
+### Evidence plan
+
+The fresh evidence that will support the final claim: tests, commands, logs, API responses, screenshots, or diff review results.
 
 ### Minimal verification path
 
@@ -234,15 +245,27 @@ A non-trivial plan should include:
 
 ## Pre-coding expectations
 
+### Baseline read set
 ### Hypothesis
 ### Success criteria
 ### Failure signals
 ### Ablations and expected observations
+### Evidence plan
 ### Minimal verification path
 
 ## Confirmed decisions
 
 ## Rejected alternatives
+
+## Fix lane and retirement lane
+
+Fix lane: how the new path becomes correct and verified.
+
+Retirement lane: how old owners, fallbacks, configs, dead paths, or compatibility shims are removed, isolated, or explicitly retained.
+
+## Checkpoint, resume hint, and drift check
+
+For long or high-risk work: what has been done, how to resume, and what would indicate the task has drifted from the original goal.
 
 ## Implementation steps
 
@@ -290,6 +313,8 @@ Before saying done:
 
 - Required tests or smoke checks have run.
 - If tests could not run, the reason is explicit and the next best verification was done.
+- Fresh evidence is named, not implied: commands, logs, API responses, screenshots, or diff review results.
+- For bug fixes, refactors, and contract changes, fix lane and retirement lane are resolved or remaining risk is explicit.
 - Diff is minimal and directly traceable to the user's request.
 - No unrelated refactor or formatting drift.
 - No orphan imports, variables, files, configs, or TODOs created by the change.
@@ -346,7 +371,9 @@ Do not create process litter. A one-off task does not need new `tasks/` files in
 
 - [ ] Task was correctly classified.
 - [ ] Relevant companion skills were loaded.
-- [ ] Non-trivial coding had hypothesis, success criteria, independent failure signals, ablations when relevant, and minimal verification path.
+- [ ] Non-trivial coding had baseline read set, hypothesis, success criteria, independent failure signals, ablations when relevant, evidence plan, and minimal verification path.
+- [ ] Bug fixes, refactors, and contract changes resolved both fix lane and retirement lane, or explicitly stated remaining risk.
+- [ ] Long or high-risk tasks maintained checkpoint, resume hint, and drift check.
 - [ ] Plan, if needed, was saved under `.hermes/plans/`.
 - [ ] Behavior changes used TDD or an explicit justified alternative.
 - [ ] Bugs were debugged to root cause.

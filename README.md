@@ -38,6 +38,8 @@ AgentForge Protocol is a small operating routine for avoiding that failure mode.
 
 **The point is simple: every meaningful step should leave evidence behind.**
 
+This version also borrows the useful parts of architecture-driven governance: read the baseline first, frame the impact before editing, separate the fix lane from the retirement lane, and keep checkpoints for long work so the task does not drift.
+
 ---
 
 ## At a glance
@@ -149,7 +151,8 @@ Use TDD unless there is a real reason not to.
 
 ```text
 read existing pattern
-→ define hypothesis / success / failure / minimal verification
+→ define baseline / hypothesis / success / failure / evidence plan
+→ track fix lane + retirement lane when needed
 → write failing test
 → run RED
 → implement minimal code
@@ -235,6 +238,9 @@ For non-trivial production code, write down the expectations before coding:
 ```md
 ## Pre-coding expectations
 
+### Baseline read set
+The source of truth, architecture boundaries, owners, impact surface, compatibility constraints, and verification entry points to inspect before editing.
+
 ### Hypothesis
 What I believe is true about the system and why this change should work.
 
@@ -247,6 +253,9 @@ These cannot just be "the success criteria did not pass".
 
 ### Ablations and expected observations
 What I expect to see if a meaningful assumption or approach changes.
+
+### Evidence plan
+The fresh evidence that will support the final claim: tests, commands, logs, API responses, screenshots, or diff review results.
 
 ### Minimal verification path
 The cheapest test, command, API call, UI action, or log check that proves the change.
@@ -271,15 +280,21 @@ Non-trivial plans live under `.hermes/plans/` and use action → verification st
 
 ## Pre-coding expectations
 
+### Baseline read set
 ### Hypothesis
 ### Success criteria
 ### Failure signals
 ### Ablations and expected observations
+### Evidence plan
 ### Minimal verification path
 
 ## Confirmed decisions
 
 ## Rejected alternatives
+
+## Fix lane and retirement lane
+
+## Checkpoint, resume hint, and drift check
 
 ## Implementation steps
 
@@ -331,7 +346,10 @@ Before the agent says "done", check the boring stuff:
 - the diff is small and tied to the request
 - there is no unrelated refactor or formatting drift
 - the change did not leave behind orphan imports, files, configs, or TODOs
+- fresh evidence is named, not implied
 - logs, API responses, UI behavior, or test output support the claim
+- bug fixes, refactors, and contract changes resolve both fix lane and retirement lane, or state remaining risk
+- long or high-risk tasks have checkpoint, resume hint, and drift check
 - risky changes got independent review
 - reusable lessons were saved in the right place
 

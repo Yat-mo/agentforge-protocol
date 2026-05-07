@@ -36,7 +36,9 @@
 
 AgentForge Protocol 是一套很小的操作習慣，用來避開這種坑。它告訴 Agent 什麼時候保持轻量，什麼時候該慢下來，什麼時候先寫測試，什麼時候應該 debug 而不是猜，什麼時候可以派 subagent，但不能把方向盤交出去。
 
-**核心很簡單：有意義的步骤，最后都要留下證據。**
+**核心很簡單：有意義的步驟，最後都要留下證據。**
+
+這個版本也吸收了架構驅動治理裡有用的部分：先讀 baseline，再判斷影響面；把修復軌和退役軌分開；長任務保留 checkpoint，避免中途跑偏。
 
 ---
 
@@ -149,7 +151,8 @@ inspect → minimal patch → cheap verification → stop
 
 ```text
 read existing pattern
-→ define hypothesis / success / failure / minimal verification
+→ define baseline / hypothesis / success / failure / evidence plan
+→ 必要時追蹤修復軌 + 退役軌
 → write failing test
 → run RED
 → implement minimal code
@@ -235,8 +238,11 @@ decompose feasibility questions
 ```md
 ## Pre-coding expectations
 
+### Baseline read set
+動手前要讀的 source of truth、架構邊界、owner、影響面、兼容約束和驗證入口。
+
 ### Hypothesis
-我認為系统里什麼是真的，以及为什么这个改动應該有效。
+我認為系統裡什麼是真的，以及為什麼這個改動應該有效。
 
 ### Success criteria
 哪些檢查能讓我放心說，這事做完了。
@@ -247,6 +253,9 @@ decompose feasibility questions
 
 ### Ablations and expected observations
 如果換掉某个关键假设或做法，我預期会看到什么。
+
+### Evidence plan
+最終結論需要哪些 fresh evidence 支撐：測試、命令、日誌、API 回應、截圖或 diff review。
 
 ### Minimal verification path
 最便宜的證明方式：測試、命令、API 調用、UI 操作或日誌檢查。
@@ -271,15 +280,21 @@ decompose feasibility questions
 
 ## Pre-coding expectations
 
+### Baseline read set
 ### Hypothesis
 ### Success criteria
 ### Failure signals
 ### Ablations and expected observations
+### Evidence plan
 ### Minimal verification path
 
 ## Confirmed decisions
 
 ## Rejected alternatives
+
+## Fix lane and retirement lane
+
+## Checkpoint, resume hint, and drift check
 
 ## Implementation steps
 
@@ -329,7 +344,10 @@ Agent 說「完成」之前，先檢查這些無聊但要命的事：
 - diff 小，而且能對應到用戶請求
 - 沒有無關重構或格式漂移
 - 沒留下自己造成的 orphan imports、文件、配置或 TODO
+- fresh evidence 要明確寫出來，不能暗示
 - 日誌、API 回應、UI 行為或測試輸出能支撐結論
+- bug fix、重構、contract 調整要解決修復軌和退役軌，或說明剩餘風險
+- 長任務或高風險任務要有 checkpoint、resume hint 和 drift check
 - 高風險改動經過獨立 review
 - 可復用經驗放到了正確地方
 

@@ -38,6 +38,8 @@ AgentForge Protocol 是一套很小的操作习惯，用来避开这种坑。它
 
 **核心很简单：有意义的步骤，最后都要留下证据。**
 
+这个版本也吸收了架构驱动治理里有用的部分：先读 baseline，再判断影响面；把修复轨和退役轨分开；长任务保留 checkpoint，避免中途跑偏。
+
 ---
 
 ## 一眼看懂
@@ -149,7 +151,8 @@ inspect → minimal patch → cheap verification → stop
 
 ```text
 read existing pattern
-→ define hypothesis / success / failure / minimal verification
+→ define baseline / hypothesis / success / failure / evidence plan
+→ 必要时追踪修复轨 + 退役轨
 → write failing test
 → run RED
 → implement minimal code
@@ -235,6 +238,9 @@ decompose feasibility questions
 ```md
 ## Pre-coding expectations
 
+### Baseline read set
+动手前要读的 source of truth、架构边界、owner、影响面、兼容约束和验证入口。
+
 ### Hypothesis
 我认为系统里什么是真的，以及为什么这个改动应该有效。
 
@@ -247,6 +253,9 @@ decompose feasibility questions
 
 ### Ablations and expected observations
 如果换掉某个关键假设或做法，我预期会看到什么。
+
+### Evidence plan
+最终结论需要哪些 fresh evidence 支撑：测试、命令、日志、API 响应、截图或 diff review。
 
 ### Minimal verification path
 最便宜的证明方式：测试、命令、API 调用、UI 操作或日志检查。
@@ -271,15 +280,21 @@ decompose feasibility questions
 
 ## Pre-coding expectations
 
+### Baseline read set
 ### Hypothesis
 ### Success criteria
 ### Failure signals
 ### Ablations and expected observations
+### Evidence plan
 ### Minimal verification path
 
 ## Confirmed decisions
 
 ## Rejected alternatives
+
+## Fix lane and retirement lane
+
+## Checkpoint, resume hint, and drift check
 
 ## Implementation steps
 
@@ -329,7 +344,10 @@ Agent 说“完成”之前，先检查这些无聊但要命的事：
 - diff 小，而且能对应到用户请求
 - 没有无关重构或格式漂移
 - 没留下自己造成的 orphan imports、文件、配置或 TODO
+- fresh evidence 要明确写出来，不能暗示
 - 日志、API 响应、UI 行为或测试输出能支撑结论
+- bug fix、重构、contract 调整要解决修复轨和退役轨，或说明剩余风险
+- 长任务或高风险任务要有 checkpoint、resume hint 和 drift check
 - 高风险改动经过独立 review
 - 可复用经验放到了正确地方
 
